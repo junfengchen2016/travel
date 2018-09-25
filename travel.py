@@ -11,6 +11,7 @@ gflags.DEFINE_string('path_txt2', './travel/txt2', '')
 gflags.DEFINE_string('path_mp3', './travel/mp3', '')
 gflags.DEFINE_string('pathname_md', './travel/tianjin.md', '')
 gflags.DEFINE_string('md_h1', '天津', '')
+gflags.DEFINE_string('md_url', 'https://pan.baidu.com/s/1TIAqZasZ661AuA6GQEU3Ig', '')
 gflags.DEFINE_string('pathname_src', '', '')
 gflags.DEFINE_string('pathname_dst', '', '')
 FLAGS = gflags.FLAGS
@@ -58,7 +59,7 @@ def batch_txt2mp3(path_txt, path_mp3):
 
         txt2mp3(pathname_txt, pathname_mp3)  
 
-def batch_txt2md(h1, path_txt, pathname_md):
+def batch_txt2md(h1, url, path_txt, pathname_md):
     filenames_txt = os.listdir(path_txt)
     dict1 = {}
     items = []
@@ -85,6 +86,7 @@ def batch_txt2md(h1, path_txt, pathname_md):
 
     with open(pathname_md, 'w', encoding='utf-8') as f:
         f.write('# {}\n'.format(h1))
+        f.write('[mp3]({})\n'.format(url))
         for key in dict1.keys():
             f.write('## {}\n'.format(key))
             for item in dict1[key]:
@@ -100,6 +102,7 @@ def main(argv):
     path_mp3 = FLAGS.path_mp3
     pathname_md = FLAGS.pathname_md
     md_h1 = FLAGS.md_h1
+    md_url = FLAGS.md_url
     pathname_src = FLAGS.pathname_src
     pathname_dst = FLAGS.pathname_dst
 
@@ -108,7 +111,7 @@ def main(argv):
     if(path_txt2 != '' and path_mp3 != ''):        
         batch_txt2mp3(path_txt2, path_mp3)
     if(path_txt2 != '' and pathname_md != ''):                
-        batch_txt2md(md_h1, path_txt2, pathname_md)
+        batch_txt2md(md_h1, md_url, path_txt2, pathname_md)
 
 if __name__ == '__main__':
     sys.exit(int(main(sys.argv) or 0))

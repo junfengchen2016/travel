@@ -5,37 +5,45 @@ import gflags
 
 from chenjunfeng.tools.baidu_aip import wzsb, yyhc
 
-gflags.DEFINE_string('path_png', './travel/png', '')
-gflags.DEFINE_string('path_txt', './travel/txt', '')
-gflags.DEFINE_string('path_txt2', './travel/txt2', '')
-gflags.DEFINE_string('path_mp3', './travel/mp3', '')
-gflags.DEFINE_string('pathname_md', './travel/tianjin.md', '')
-gflags.DEFINE_string('md_h1', '天津', '')
-gflags.DEFINE_string('md_url', 'https://pan.baidu.com/s/1TIAqZasZ661AuA6GQEU3Ig', '')
+gflags.DEFINE_string('path_image', './travel/yuanmingyuan/image', '')
+gflags.DEFINE_string('path_txt', './travel/yuanmingyuan/txt', '')
+gflags.DEFINE_string('path_txt2', './travel/yuanmingyuan/txt2', '')
+gflags.DEFINE_string('path_mp3', './travel/yuanmingyuan/mp3', '')
+gflags.DEFINE_string('pathname_md', './travel/yuanmingyuan/yuanmingyuan.md', '')
+gflags.DEFINE_string('md_h1', '圆明园', '')
+gflags.DEFINE_string('md_url', 'https://pan.baidu.com/s/11A_rII4K-vr5UbLPjrPaZA', '')
 gflags.DEFINE_string('pathname_src', '', '')
 gflags.DEFINE_string('pathname_dst', '', '')
 FLAGS = gflags.FLAGS
 
-def png2txt(pathname_png, pathname_txt):
-    with open(pathname_png, 'rb') as f:
+def image2txt(pathname_image, pathname_txt):
+    with open(pathname_image, 'rb') as f:
         wzsb_bytes = f.read()
     lines = wzsb(wzsb_bytes)
     with open(pathname_txt, 'w', encoding='utf-8') as f:
         f.write('\n'.join(lines))
     pass    
 
-def batch_png2txt(path_png, path_txt):
-    if(not os.path.exists(path_png)): os.makedirs(path_txt)
-    filenames_png = os.listdir(path_png)
-    for i, filename_png in enumerate(filenames_png):
-        stem, extension = os.path.splitext(filename_png)
-        if (extension.lower() != '.png'): continue
+def jpg2txt(pathname_jpg, pathname_txt):
+    with open(pathname_jpg, 'rb') as f:
+        wzsb_bytes = f.read()
+    lines = wzsb(wzsb_bytes)
+    with open(pathname_txt, 'w', encoding='utf-8') as f:
+        f.write('\n'.join(lines))
+    pass        
+
+def batch_image2txt(path_image, path_txt):
+    if(not os.path.exists(path_image)): os.makedirs(path_txt)
+    filenames_image = os.listdir(path_image)
+    for i, filename_image in enumerate(filenames_image):
+        stem, extension = os.path.splitext(filename_image)
+        if (extension.lower() != '.jpg' and extension.lower() != '.png'): continue
         
-        pathname_png = '{}/{}'.format(path_png, filename_png)
+        pathname_image = '{}/{}'.format(path_image, filename_image)
         pathname_txt = '{}/{}.txt'.format(path_txt, stem)
         if(os.path.exists(pathname_txt)): continue
 
-        png2txt(pathname_png, pathname_txt)
+        image2txt(pathname_image, pathname_txt)
 
 def txt2mp3(pathname_txt, pathname_mp3):
     with open(pathname_txt, 'r', encoding='utf-8') as f:
@@ -96,7 +104,7 @@ def batch_txt2md(h1, url, path_txt, pathname_md):
 
 def main(argv):
     FLAGS(argv)
-    path_png = FLAGS.path_png
+    path_image = FLAGS.path_image
     path_txt = FLAGS.path_txt
     path_txt2 = FLAGS.path_txt2
     path_mp3 = FLAGS.path_mp3
@@ -106,8 +114,8 @@ def main(argv):
     pathname_src = FLAGS.pathname_src
     pathname_dst = FLAGS.pathname_dst
 
-    if(path_png != '' and path_txt != ''):
-        batch_png2txt(path_png, path_txt)
+    if(path_image != '' and path_txt != ''):
+        batch_image2txt(path_image, path_txt)
     if(path_txt2 != '' and path_mp3 != ''):        
         batch_txt2mp3(path_txt2, path_mp3)
     if(path_txt2 != '' and pathname_md != ''):                
